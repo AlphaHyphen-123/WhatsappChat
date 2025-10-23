@@ -5,9 +5,6 @@ dotenv.config();
 
 const mongoURL = process.env.mongoURL;
 
-const connection = mongoose.connect(mongoURL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+const connection = mongoose.connect(mongoURL); 
 
 export default connection;
