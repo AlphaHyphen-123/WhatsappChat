@@ -1,0 +1,8 @@
+@import "tailwindcss";
+@plugin "daisyui";
+@import 'flowbite';
+
+.flex-1::-webkit-scrollbar{
+  display: none;
+  
+}

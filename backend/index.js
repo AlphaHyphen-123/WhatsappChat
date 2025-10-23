@@ -36,13 +36,13 @@ app.use("/api/user", userRoute);
 app.use("/api/message", messageRoute);
 
 // ✅ Production Build Serve
-// if (process.env.NODE_ENV === "production") {
-//   const __dirname = path.resolve();
-//   app.use(express.static("./Frontend/dist"));
-//   app.get("*", (req, res) => {
-//     res.sendFile(path.resolve(__dirname, "./Frontend/dist", "index.html"));
-//   });
-// }
+if (process.env.NODE_ENV === "production") {
+  const __dirname = path.resolve();
+  app.use(express.static("./Frontend/dist"));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "./Frontend/dist", "index.html"));
+  });
+}
 
 
 
