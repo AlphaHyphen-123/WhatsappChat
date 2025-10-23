@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { IoSend } from "react-icons/io5";
 import useSendMessage from "../../context/useSendMessage.js";
 
-function Typesend() {
+function TypeSend() {
   const [message, setMessage] = useState("");
   const { loading, sendMessages } = useSendMessage();
 
@@ -33,4 +33,4 @@ function Typesend() {
   );
 }
 
-export default Typesend;
+export default TypeSend;
