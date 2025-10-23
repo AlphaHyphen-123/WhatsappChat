@@ -69,7 +69,7 @@ function Login() {
     if (!hasError) {
       try {
         // Replace with your API endpoint
-        const response = await axios.post('https://whatsappchat-vb74.onrender.com/api/user/login', formData);
+        const response = await axios.post('/api/user/login', formData);
 
         setIsLoading(false);
         setSuccessMessage('Login successful! Redirecting...');
