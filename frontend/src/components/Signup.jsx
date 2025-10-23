@@ -32,7 +32,7 @@ function Signup() {
     setSuccessMessage('');
     try {
       const res = await axios.post(
-        "/api/user/signup",
+        `${import.meta.env.VITE_BACKEND_URL}/api/user/signup`,
         data,
         { withCredentials: true }  // 👈 important line for cookies
       );

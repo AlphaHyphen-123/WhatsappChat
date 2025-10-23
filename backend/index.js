@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "https://chatapp-yt-vu7b.onrender.com", // ✅ your frontend URL
+    origin: process.env.VITE_FRONTEND_URL, // ✅ your frontend URL
     credentials: true, // ✅ allow cookies/tokens
     methods: ["GET", "POST", "PUT", "DELETE"],
     

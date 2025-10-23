@@ -69,7 +69,7 @@ function Login() {
     if (!hasError) {
       try {
         // Replace with your API endpoint
-        const response = await axios.post('/api/user/login', formData);
+        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/user/login`, formData);
 
         setIsLoading(false);
         setSuccessMessage('Login successful! Redirecting...');
