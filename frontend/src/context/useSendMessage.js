@@ -8,7 +8,7 @@ const useSendMessage = () => {
     setLoading(true);
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/message/send/${selectedConversation._id}`,
+        `https://whatsappchat-vb74.onrender.com/api/message/send/${selectedConversation._id}`,
         { message }
       );
       setMessage([...messages, res.data]);

@@ -9,7 +9,7 @@ function useGetAllUsers() {
       setLoading(true);
       try {
         const token = Cookies.get("jwt");
-        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}`, {
+        const response = await axios.get( "https://whatsappchat-vb74.onrender.com/api/user/allusers", {
            withCredentials: true,
           headers: {
             Authorization: `Bearer ${token}`,

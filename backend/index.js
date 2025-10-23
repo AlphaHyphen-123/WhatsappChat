@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: process.env.VITE_FRONTEND_URL, // ✅ your frontend URL
+    origin: "https://whatsapp-chat-sandy.vercel.app", // ✅ your frontend URL
     credentials: true, // ✅ allow cookies/tokens
     methods: ["GET", "POST", "PUT", "DELETE"],
     

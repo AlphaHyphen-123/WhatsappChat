@@ -11,7 +11,7 @@ const useGetMessage = () => {
       if (selectedConversation && selectedConversation._id) {
         try {
           const res = await axios.get(
-            `${import.meta.env.VITE_BACKEND_URL}/api/message/get/${selectedConversation._id}`          );
+            `https://whatsappchat-vb74.onrender.com/api/message/get/${selectedConversation._id}`          );
           setMessage(res.data);
           setLoading(false);
         } catch (error) {

@@ -10,7 +10,7 @@ function Logout() {
         setLoading(true)
           try {
 
-       const res =     await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/user/logout`);
+       const res =     await axios.post('https://whatsappchat-vb74.onrender.com/api/user/logout');
        localStorage.removeItem("ChatApp");
 
        Cookies.remove("jwt");

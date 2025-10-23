@@ -15,7 +15,7 @@ export const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     if (authUser) {
-      const socket = io(`${import.meta.env.VITE_BACKEND_URL}`, {
+      const socket = io("https://whatsappchat-vb74.onrender.com", {
         query: {
           userId: authUser.user._id,
         },
