@@ -32,7 +32,7 @@ function Signup() {
     setSuccessMessage('');
     try {
       const res = await axios.post(
-       '/api/user/signup',
+       'https://whatsappchat-vb74.onrender.com/api/user/signup',
         data,
         { withCredentials: true }  // 👈 important line for cookies
       );
