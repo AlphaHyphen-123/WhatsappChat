@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import Chatuser from "./ChatUser";
+import Chatuser from "./Chatuser";
 import Messages from "./Messages";
-import Typesend from "./TypeSend.jsx";
+import Typesend from "./Typesend";
 import useConversation from "../../zustand/useConversation.js";
 import { useAuth } from "../../context/AuthProvider.jsx";
 import { CiMenuFries } from "react-icons/ci";
@@ -12,7 +12,7 @@ function Right() {
     return setSelectedConversation(null);
   }, [setSelectedConversation]);
   return (
-    <div className="w-full h-screen flex flex-col bg-slate-900 text-gray-300">
+    <div className="w-full bg-slate-900 text-gray-300">
       <div>
         {!selectedConversation ? (
           <NoChatSelected />
@@ -37,31 +37,30 @@ export default Right;
 
 const NoChatSelected = () => {
   const [authUser] = useAuth();
-
-  console.log("authUser object:", authUser);
-  console.log("User full name:", authUser?.user?.fullname);
-
-  const fullName = authUser?.user?.fullname;
-
+  console.log(authUser);
   return (
-    <div className="relative">
-      <label
-        htmlFor="my-drawer-2"
-        className="btn btn-ghost drawer-button lg:hidden absolute left-5"
-      >
-        <CiMenuFries className="text-white text-xl" />
-      </label>
-
-      <div className="flex h-screen items-center justify-center">
-        <h1 className="text-center">
-          Welcome{" "}
-          <span className="font-semibold text-xl">{fullName}</span>
-          <br />
-          No chat selected — please start a conversation by selecting anyone
-          from your contacts.
-        </h1>
+    <>
+      <div className="relative">
+        <label
+          htmlFor="my-drawer-2"
+          className="btn btn-ghost drawer-button lg:hidden absolute left-5"
+        >
+          <CiMenuFries className="text-white text-xl" />
+        </label>
+        <div className="flex h-screen items-center justify-center">
+          <h1 className="text-center">
+            Welcome{" "}
+            <span className="font-semibold text-xl">
+              console.log({authUser.user.fullname});
+              
+              {authUser.user.fullname}
+            </span>
+            <br />
+            No chat selected, please start conversation by selecting anyone to
+            your contacts
+          </h1>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
-

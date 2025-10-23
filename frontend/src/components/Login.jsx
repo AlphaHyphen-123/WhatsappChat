@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios'; // Import axios
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from "../context/AuthProvider.jsx";
+import toast from 'react-hot-toast';
 
 
 function Login() {
@@ -70,7 +71,9 @@ function Login() {
       try {
         // Replace with your API endpoint
         const response = await axios.post('https://whatsappchat-vb74.onrender.com/api/user/login', formData);
-
+        if(response.data){
+          toast.success("Login successful")
+        }
         setIsLoading(false);
         setSuccessMessage('Login successful! Redirecting...');
         // ✅ Save complete response
@@ -85,7 +88,8 @@ function Login() {
       } catch (error) {
         setIsLoading(false);
         if (error.response) {
-          alert("User Email Or Password is Wrong 😔!");
+          
+          toast.error("User Email Or Password is Wrong 😔!");
 
           // Server responded with a status other than 2xx
           setErrors({ apiError: error.response.data.message || 'Login failed.' });
