@@ -16,14 +16,15 @@ dotenv.config();
 // middlewares
 app.use(express.json());
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: "https://whatsapp-chat-sandy.vercel.app", // ✅ your frontend URL
-    credentials: true, // ✅ allow cookies/tokens
-    methods: ["GET", "POST", "PUT", "DELETE"],
+app.use(cors());
+// app.use(
+//   cors({
+//     origin: "http://localhost:5173", // ✅ your frontend URL
+//     credentials: true, // ✅ allow cookies/tokens
+//     methods: ["GET", "POST", "PUT", "DELETE"],
     
-  })
-);
+//   })
+// );
 
 
 // ✅ Correct CORS Setup
@@ -39,11 +40,12 @@ app.use("/api/message", messageRoute);
 if (process.env.NODE_ENV === "production") {
   const __dirname = path.resolve();
   app.use(express.static("./Frontend/dist"));
-  app.get("*", (req, res) => {
+
+  // ✅ Correct route pattern for Express v5
+  app.get(/.*/, (req, res) => {
     res.sendFile(path.resolve(__dirname, "./Frontend/dist", "index.html"));
   });
 }
-
 
 
 

@@ -1,26 +1,38 @@
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
+
 function useGetAllUsers() {
   const [allUsers, setAllUsers] = useState([]);
   const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     const getUsers = async () => {
       setLoading(true);
       try {
         const token = Cookies.get("jwt");
-        const response = axios.get("https://whatsappchat-vb74.onrender.com/api/user/allusers", {
-          withCredentials: true,
-          headers: { Authorization: `Bearer ${token}` }, // <- token undefined
-        });
-        setAllUsers(response.data);
-        setLoading(false);
+
+        // ✅ full API URL (backend)
+        const response = await axios.get(
+          "/api/user/allusers",
+          {
+            withCredentials: true,
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        setAllUsers(response.data || []);
       } catch (error) {
-        console.log("Error in useGetAllUsers: " + error);
+        console.error("❌ Error in useGetAllUsers:", error);
+        setAllUsers([]); // ✅ fallback to empty array to avoid .map crash
+      } finally {
+        setLoading(false);
       }
     };
+
     getUsers();
   }, []);
+
   return [allUsers, loading];
 }
 
