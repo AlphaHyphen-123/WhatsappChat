@@ -39,11 +39,11 @@ app.use("/api/message", messageRoute);
 // ✅ Production Build Serve
 if (process.env.NODE_ENV === "production") {
   const __dirname = path.resolve();
-  app.use(express.static("./Frontend/dist"));
+  app.use(express.static("./frontend/dist"));
 
   // ✅ Correct route pattern for Express v5
   app.get(/.*/, (req, res) => {
-    res.sendFile(path.resolve(__dirname, "./Frontend/dist", "index.html"));
+    res.sendFile(path.resolve(__dirname, "./frontend/dist", "index.html"));
   });
 }
 
