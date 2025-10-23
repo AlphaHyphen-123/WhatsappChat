@@ -7,7 +7,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "https://whatsapp-chat-sandy.vercel.app/",
+    origin: "https://whatsapp-chat-sandy.vercel.app",
     methods: ["GET", "POST"],
   },
 });
