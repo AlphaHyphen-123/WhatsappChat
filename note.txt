@@ -1,0 +1,31 @@
+.........Message Model.............
+
+
+Ankush(sender)  --->  hiii akhil
+akhil(reciver)  ---> hii ankush
+
+
+
+
+
+
+
+_id = 0*12345
+senderId = 68f251c48cd3443bb64a5f7d
+ reciverId =68f251c48cd3443bb64a5f7d
+Messages  = "hiii akhil "
+
+_id = 0*12345
+senderId = 68f251c48cd3443bb64a5f7d
+ reciverId =68f251c48cd3443bb64a5f7d
+Messages  = "hiii ankush "
+
+
+
+..............converstaion model..................
+
+_id = 0*12345
+
+memebers [SenderId, reciverId]
+
+Messages[id]
