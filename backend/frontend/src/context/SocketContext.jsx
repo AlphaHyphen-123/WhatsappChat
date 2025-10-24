@@ -13,25 +13,25 @@ export const SocketProvider = ({ children }) => {
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [authUser] = useAuth();
 
- 
-useEffect(() => {
-  if (!authUser || !authUser.user || !authUser.user._id) return; // ✅ Prevent crash
-
-  const socketInstance = io("https://chatapplication-w8zh.onrender.com", {
-    query: {
-      userId: authUser.user._id,
-    },
-  });
-
-  setSocket(socketInstance);
-
-  socketInstance.on("getOnlineUsers", (users) => {
-    setOnlineUsers(users);
-  });
-
-  return () => socketInstance.close();
-}, [authUser]);
-
+  useEffect(() => {
+    if (authUser) {
+      const socket = io("https://chatapplication-w8zh.onrender.com", {
+        query: {
+          userId: authUser.user._id,
+        },
+      });
+      setSocket(socket);
+      socket.on("getOnlineUsers", (users) => {
+        setOnlineUsers(users);
+      });
+      return () => socket.close();
+    } else {
+      if (socket) {
+        socket.close();
+        setSocket(null);
+      }
+    }
+  }, [authUser]);
   return (
     <socketContext.Provider value={{ socket, onlineUsers }}>
       {children}

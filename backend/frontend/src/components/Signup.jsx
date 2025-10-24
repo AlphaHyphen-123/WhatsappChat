@@ -21,38 +21,29 @@ function Signup() {
     return value === password || "Passwords do not match";
   };
 
-const onSubmit = async (data) => {
-  const userInfo = {
-    fullname: data.fullname,
-    email: data.email,
-    password: data.password,
-    confirmPassword: data.confirmPassword,
+  const onSubmit = async (data) => {
+    const userInfo = {
+      fullname: data.fullname,
+      email: data.email,
+      password: data.password,
+      confirmPassword: data.confirmPassword,
+    };
+    // console.log(userInfo);
+    await axios
+      .post("/api/user/signup", userInfo)
+      .then((response) => {
+        if (response.data) {
+          toast.success("Signup successful");
+        }
+        localStorage.setItem("ChatApp", JSON.stringify(response.data));
+        setAuthUser(response.data.user);
+      })
+      .catch((error) => {
+        if (error.response) {
+          toast.error("Error: " + error.response.data.error);
+        }
+      });
   };
-
-  try {
-    const response = await axios.post("/api/user/signup", userInfo);
-    console.log("✅ Backend response:", response.data);
-
-    // ✅ Check before accessing newUser
-    if (response.data && response.data.user) {
-      toast.success("Signup successful");
-
-      localStorage.setItem("ChatApp", JSON.stringify(response.data.user));
-      setAuthUser(response.data.user);
-    } else {
-      toast.error("Signup failed: Missing user data");
-      console.error("Unexpected API response:", response.data);
-    }
-  } catch (error) {
-    console.error("Signup error:", error);
-    if (error.response && error.response.data?.error) {
-      toast.error("Error: " + error.response.data.error);
-    } else {
-      toast.error("Something went wrong. Try again!");
-    }
-  }
-};
-
   return (
     <>
       <div className="flex h-screen items-center justify-center">
