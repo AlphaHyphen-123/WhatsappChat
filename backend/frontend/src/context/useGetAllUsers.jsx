@@ -14,7 +14,7 @@ function useGetAllUsers() {
 
         // ✅ full API URL (backend)
         const response = await axios.get(
-          "/api/user/allusers",
+          "https://chatapplication-w8zh.onrender.com/api/user/allusers",
           {
             withCredentials: true,
             headers: { Authorization: `Bearer ${token}` },
