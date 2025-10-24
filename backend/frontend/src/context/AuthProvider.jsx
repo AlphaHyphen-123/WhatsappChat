@@ -7,7 +7,7 @@ export const AuthProvider = ({ children }) => {
 
   // parse the user data and storing in state.
   const [authUser, setAuthUser] = useState(
-    initialUserState ? JSON.parse(initialUserState) : undefined
+    initialUserState ? JSON.parse(initialUserState) : null
   );
   return (
     <AuthContext.Provider value={[authUser, setAuthUser]}>

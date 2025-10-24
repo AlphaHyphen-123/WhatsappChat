@@ -1,19 +1,16 @@
 import React, { useEffect } from "react";
-import ChatUser from "./ChatUser.jsx"; // ✅ Correct casing
-
+import Chatuser from "./ChatUser";
 import Messages from "./Messages";
-import Typesend from "./TypeSend";
+import Typesend from "./Typesend";
 import useConversation from "../../zustand/useConversation.js";
 import { useAuth } from "../../context/AuthProvider.jsx";
 import { CiMenuFries } from "react-icons/ci";
 
 function Right() {
   const { selectedConversation, setSelectedConversation } = useConversation();
-
   useEffect(() => {
     return setSelectedConversation(null);
   }, [setSelectedConversation]);
-
   return (
     <div className="w-full bg-slate-900 text-gray-300">
       <div>
@@ -21,9 +18,9 @@ function Right() {
           <NoChatSelected />
         ) : (
           <>
-            <ChatUser />
+            <Chatuser />
             <div
-              className="flex-1 overflow-y-auto"
+              className=" flex-1 overflow-y-auto"
               style={{ maxHeight: "calc(92vh - 8vh)" }}
             >
               <Messages />
@@ -38,10 +35,10 @@ function Right() {
 
 export default Right;
 
-// ----------------------------
 const NoChatSelected = () => {
   const [authUser] = useAuth();
-  const fullname = authUser?.user?.fullname
+  console.log(authUser);
+
   return (
     <div className="relative">
       <label
@@ -54,7 +51,7 @@ const NoChatSelected = () => {
         <h1 className="text-center">
           Welcome{" "}
           <span className="font-semibold text-xl">
-            {fullname}
+            {authUser?.fullname || "User"}
           </span>
           <br />
           No chat selected, please start conversation by selecting anyone from

@@ -1,217 +1,194 @@
-import React, { useState } from 'react';
+import React from "react";
 import { useForm } from "react-hook-form";
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthProvider.jsx';
-import toast from 'react-hot-toast';
-
-
-
+import axios from "axios";
+import { useAuth } from "../context/AuthProvider";
+import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
 function Signup() {
-
-  const [authUser, setAuthUser] = useAuth()
-
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
-
-  const navigate = useNavigate();
-
+  const [authUser, setAuthUser] = useAuth();
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-    reset
   } = useForm();
 
-  const password = watch('password');
+  // watch the password and confirm password fields
+  const password = watch("password", "");
+  const confirmPassword = watch("confirmPassword", "");
 
-  const onSubmit = async (data) => {
-    setIsLoading(true);
-    setSuccessMessage('');
-    try {
-      const res = await axios.post(
-       '/api/user/signup',
-        data,
-        { withCredentials: true }  // 👈 important line for cookies
-      );
-
-
-      console.log(res.data);
-      localStorage.setItem("ChatApp", JSON.stringify(res.data));
-      setAuthUser(res.data);
-      if(res.data){
-        toast.success("Signup successful!")
-      }
-
-      // setSuccessMessage("Signup successful!");
-      alert("Signup successful!");
-      reset();
-    } catch (error) {
-      console.error(error);
-      if(error.res){
-        toast.error("Error: "+error.res.data.error)
-      }
-      alert("Signup failed!");
-    } finally {
-      setIsLoading(false);
-    }
+  const validatePasswordMatch = (value) => {
+    return value === password || "Passwords do not match";
   };
 
-  const gotologin = () => {
-    navigate("/login")
+const onSubmit = async (data) => {
+  const userInfo = {
+    fullname: data.fullname,
+    email: data.email,
+    password: data.password,
+    confirmPassword: data.confirmPassword,
+  };
+
+  try {
+    const response = await axios.post("/api/user/signup", userInfo);
+    console.log("✅ Backend response:", response.data);
+
+    // ✅ Check before accessing newUser
+    if (response.data && response.data.user) {
+      toast.success("Signup successful");
+
+      localStorage.setItem("ChatApp", JSON.stringify(response.data.user));
+      setAuthUser(response.data.user);
+    } else {
+      toast.error("Signup failed: Missing user data");
+      console.error("Unexpected API response:", response.data);
+    }
+  } catch (error) {
+    console.error("Signup error:", error);
+    if (error.response && error.response.data?.error) {
+      toast.error("Error: " + error.response.data.error);
+    } else {
+      toast.error("Something went wrong. Try again!");
+    }
   }
+};
 
   return (
-    <div className="flex h-screen items-center justify-center bg-gradient-to-br from-green-50 to-white">
-      <div className="w-full max-w-md p-8 bg-white rounded-xl shadow-lg border border-green-200 transition-all duration-300 ease-in-out hover:shadow-xl"
-        style={{ animation: 'fadeIn 0.5s ease-in' }}>
-
-        <h1 className="text-3xl font-bold text-center text-green-600 mb-6">
-          Text <span className="text-green-500 font-semibold">App</span>
-        </h1>
-        <h2 className="text-2xl font-bold text-black text-center mb-6">Sign Up</h2>
-
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-
-          {/* Full Name */}
-          <div>
+    <>
+      <div className="flex h-screen items-center justify-center">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="border border-white px-6 py-2 rounded-md space-y-3 w-96"
+        >
+          <h1 className="text-2xl text-center">
+            Chat<span className="text-green-500 font-semibold">App</span>
+          </h1>
+          <h2 className="text-xl text-white font-bold">Signup</h2>
+          <br />
+          {/* Fullname */}
+          <label className="input input-bordered flex items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              className="w-4 h-4 opacity-70"
+            >
+              <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
+            </svg>
             <input
               type="text"
-              placeholder="Full Name"
-              {...register("fullname", { required: "Full name is required" })}
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-gray-50 focus:border-green-500 outline-none"
+              className="grow"
+              placeholder="Fullname"
+              {...register("fullname", { required: true })}
             />
-            {errors.fullname && (
-              <p className="mt-1 text-sm text-red-500">{errors.fullname.message}</p>
-            )}
-          </div>
-
+          </label>
+          {errors.fullname && (
+            <span className="text-red-500 text-sm font-semibold">
+              This field is required
+            </span>
+          )}
           {/* Email */}
-          <div>
+          <label className="input input-bordered flex items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              className="w-4 h-4 opacity-70"
+            >
+              <path d="M2.5 3A1.5 1.5 0 0 0 1 4.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l6.598-3.185A.755.755 0 0 1 15 5.293V4.5A1.5 1.5 0 0 0 13.5 3h-11Z" />
+              <path d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z" />
+            </svg>
             <input
               type="email"
+              className="grow"
               placeholder="Email"
-              {...register("email", {
-                required: "Email is required",
-                pattern: {
-                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: "Invalid email address"
-                }
-              })}
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-gray-50 focus:border-green-500 outline-none"
+              {...register("email", { required: true })}
             />
-            {errors.email && (
-              <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
-            )}
-          </div>
+          </label>
+          {errors.email && (
+            <span className="text-red-500 text-sm font-semibold">
+              This field is required
+            </span>
+          )}
 
           {/* Password */}
-          <div>
-            <div className="flex items-center border border-gray-300 rounded-lg px-4 py-3 bg-gray-50">
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="Password"
-                {...register("password", {
-                  required: "Password is required",
-                  minLength: { value: 8, message: "Minimum 8 characters" }
-                })}
-                className="flex-1 bg-transparent outline-none"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="ml-2 text-gray-400 hover:text-green-500"
-              >
-                {showPassword ? "Hide" : "Show"}
-              </button>
-            </div>
-            {errors.password && (
-              <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>
-            )}
-
-            {/* Password Strength Bar */}
-            <div className="mt-2 h-2 rounded-full bg-gray-200">
-              <div
-                className={`h-2 rounded-full ${password?.length >= 8
-                    ? "bg-green-500"
-                    : password?.length > 0
-                      ? "bg-yellow-500"
-                      : "bg-gray-200"
-                  }`}
-                style={{
-                  width: password?.length >= 8 ? "100%" : `${(password?.length || 0) * 10}%`
-                }}
-              ></div>
-            </div>
-          </div>
-
-          {/* Confirm Password */}
-          <div>
-            <div className="flex items-center border border-gray-300 rounded-lg px-4 py-3 bg-gray-50">
-              <input
-                type={showConfirmPassword ? "text" : "password"}
-                placeholder="Confirm Password"
-                {...register("confirmPassword", {
-                  required: "Confirm password is required",
-                  validate: (value) =>
-                    value === password || "Passwords do not match"
-                })}
-                className="flex-1 bg-transparent outline-none"
-              />
-              <button
-                type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="ml-2 text-gray-400 hover:text-green-500"
-              >
-                {showConfirmPassword ? "Hide" : "Show"}
-              </button>
-            </div>
-            {errors.confirmPassword && (
-              <p className="mt-1 text-sm text-red-500">{errors.confirmPassword.message}</p>
-            )}
-          </div>
-
-          {/* Submit */}
-          <div className="flex justify-between items-center mt-6">
-            <p className="text-sm text-gray-600">
-              Have an account?{' '}
-              <a href="/login" onClick={gotologin} className="text-blue-500 underline hover:text-blue-700">
-                Login
-              </a>
-            </p>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="bg-green-500 text-white px-6 py-2 rounded-lg shadow-md hover:bg-green-600 transition-all disabled:opacity-50"
+          <label className="input input-bordered flex items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              className="w-4 h-4 opacity-70"
             >
-              {isLoading ? 'Signing Up...' : 'Sign Up'}
-            </button>
-          </div>
-
-          {successMessage && (
-            <p className="mt-4 text-green-500 text-center font-semibold">{successMessage}</p>
+              <path
+                fillRule="evenodd"
+                d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <input
+              type="password"
+              className="grow"
+              placeholder="password"
+              {...register("password", { required: true })}
+            />
+          </label>
+          {errors.password && (
+            <span className="text-red-500 text-sm font-semibold">
+              This field is required
+            </span>
           )}
+
+          {/*Confirm Password */}
+          <label className="input input-bordered flex items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              className="w-4 h-4 opacity-70"
+            >
+              <path
+                fillRule="evenodd"
+                d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <input
+              type="password"
+              className="grow"
+              placeholder="confirm password"
+              {...register("confirmPassword", {
+                required: true,
+                validate: validatePasswordMatch,
+              })}
+            />
+          </label>
+          {errors.confirmPassword && (
+            <span className="text-red-500 text-sm font-semibold">
+              {errors.confirmPassword.message}
+            </span>
+          )}
+
+          {/* Text & Button */}
+          <div className="flex justify-between">
+            <p>
+              Have an account?
+              <Link
+                to="/login"
+                className="text-blue-500 underline cursor-pointer ml-1"
+              >
+                Login
+              </Link>
+            </p>
+            <input
+              type="submit"
+              value="Signup"
+              className="text-white bg-green-500 px-2 py-1 cursor-pointer rounded-lg"
+            />
+          </div>
         </form>
       </div>
-    </div>
+    </>
   );
 }
 
-// Animations
-const style = document.createElement('style');
-style.innerHTML = `
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-`;
-document.head.appendChild(style);
-
 export default Signup;
-
-
-
-
