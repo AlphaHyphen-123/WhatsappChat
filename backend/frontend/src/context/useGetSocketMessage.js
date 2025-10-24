@@ -1,27 +1,20 @@
-import { useEffect } from "react";
-import { useSocketContext } from "./SocketContext.jsx";
+import React, { useEffect } from "react";
+import { useSocketContext } from "./SocketContext";
 import useConversation from "../zustand/useConversation.js";
 import sound from "../assets/notification.mp3";
-
 const useGetSocketMessage = () => {
   const { socket } = useSocketContext();
   const { messages, setMessage } = useConversation();
 
   useEffect(() => {
-    if (!socket) return; // ✅ Prevent errors if socket is not ready
-
-    const handleNewMessage = (newMessage) => {
+    socket.on("newMessage", (newMessage) => {
       const notification = new Audio(sound);
       notification.play();
-      setMessage((prevMessages) => [...prevMessages, newMessage]); // ✅ Use functional update to avoid stale closure
-    };
-
-    socket.on("newMessage", handleNewMessage);
-
+      setMessage([...messages, newMessage]);
+    });
     return () => {
-      socket.off("newMessage", handleNewMessage);
+      socket.off("newMessage");
     };
-  }, [socket, setMessage]);
+  }, [socket, messages, setMessage]);
 };
-
 export default useGetSocketMessage;
